@@ -138,6 +138,9 @@ consoleintr(int c)
   acquire(&cons.lock);
 
   switch(c){
+  case C('R'):
+    procdump_sleeping(); // Print sleeping list
+    break;
   case C('P'):  // Print process list.
     procdump();
     break;
