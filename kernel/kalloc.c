@@ -9,6 +9,10 @@
 #include "riscv.h"
 #include "defs.h"
 
+
+extern int kvmAllocTimes;   
+extern int kvmAllocPeriod; 
+
 void freerange(void *pa_start, void *pa_end);
 
 extern char end[]; // first address after kernel.
@@ -69,14 +73,19 @@ void *
 kalloc(void)
 {
   struct run *r;
-
+  
+  if (kvmAllocPeriod){
+    kvmAllocTimes++; 
+  }
+ 
   acquire(&kmem.lock);
   r = kmem.freelist;
   if(r)
     kmem.freelist = r->next;
   release(&kmem.lock);
 
-  if(r)
+  if(r){
     memset((char*)r, 5, PGSIZE); // fill with junk
+  }
   return (void*)r;
 }

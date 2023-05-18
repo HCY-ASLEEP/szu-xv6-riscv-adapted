@@ -6,6 +6,9 @@
 #include "defs.h"
 #include "fs.h"
 
+int kvmAllocTimes; 
+int kvmAllocPeriod; 
+
 /*
  * the kernel's page table.
  */
@@ -24,27 +27,64 @@ kvmmake(void)
   kpgtbl = (pagetable_t) kalloc();
   memset(kpgtbl, 0, PGSIZE);
 
+  int preKvmAllocTimes = 0; 
+
   // uart registers
   kvmmap(kpgtbl, UART0, UART0, PGSIZE, PTE_R | PTE_W);
+  
+  printf("\n%s\n","================================================="); 
+  printf("uart registers:\nPeriod kalloc times -> %d\nTotal kalloc times -> %d \n",kvmAllocTimes - preKvmAllocTimes, kvmAllocTimes); 
+  preKvmAllocTimes = kvmAllocTimes; 
+  printf("%s\n\n\n","================================================="); 
 
   // virtio mmio disk interface
   kvmmap(kpgtbl, VIRTIO0, VIRTIO0, PGSIZE, PTE_R | PTE_W);
 
+  printf("%s\n","================================================="); 
+  printf("virtio mmio disk interface:\nPeriod kalloc times -> %d\nTotal kalloc times -> %d \n",kvmAllocTimes - preKvmAllocTimes, kvmAllocTimes); 
+  preKvmAllocTimes = kvmAllocTimes;
+  printf("%s\n\n\n","================================================="); 
+  
   // PLIC
   kvmmap(kpgtbl, PLIC, PLIC, 0x400000, PTE_R | PTE_W);
 
+  printf("%s\n","================================================="); 
+  printf("PLIC:\nPeriod kalloc times -> %d\nTotal kalloc times -> %d \n",kvmAllocTimes - preKvmAllocTimes, kvmAllocTimes); 
+  preKvmAllocTimes = kvmAllocTimes;
+  printf("%s\n\n\n","================================================="); 
+  
   // map kernel text executable and read-only.
   kvmmap(kpgtbl, KERNBASE, KERNBASE, (uint64)etext-KERNBASE, PTE_R | PTE_X);
 
+  printf("%s\n","================================================="); 
+  printf("map kernel text executable and read-only:\nPeriod kalloc times -> %d\nTotal kalloc times -> %d \n",kvmAllocTimes - preKvmAllocTimes, kvmAllocTimes); 
+  preKvmAllocTimes = kvmAllocTimes;
+  printf("%s\n\n\n","================================================="); 
+  
   // map kernel data and the physical RAM we'll make use of.
   kvmmap(kpgtbl, (uint64)etext, (uint64)etext, PHYSTOP-(uint64)etext, PTE_R | PTE_W);
 
+  printf("%s\n","================================================="); 
+  printf("map kernel data and the physical RAM:\nPeriod kalloc times -> %d\nTotal kalloc times -> %d \n",kvmAllocTimes - preKvmAllocTimes, kvmAllocTimes); 
+  preKvmAllocTimes = kvmAllocTimes;
+  printf("%s\n\n\n","================================================="); 
+  
   // map the trampoline for trap entry/exit to
   // the highest virtual address in the kernel.
   kvmmap(kpgtbl, TRAMPOLINE, (uint64)trampoline, PGSIZE, PTE_R | PTE_X);
 
+  printf("%s\n","================================================="); 
+  printf("map the trampoline for trap entry/exit:\nPeriod kalloc times -> %d\nTotal kalloc times -> %d \n",kvmAllocTimes - preKvmAllocTimes, kvmAllocTimes); 
+  preKvmAllocTimes = kvmAllocTimes;
+  printf("%s\n\n\n","================================================="); 
+  
   // allocate and map a kernel stack for each process.
   proc_mapstacks(kpgtbl);
+  
+  printf("%s\n","================================================="); 
+  printf("allocate and map a kernel stack for each process:\nPeriod kalloc times -> %d\nTotal kalloc times -> %d \n",kvmAllocTimes - preKvmAllocTimes, kvmAllocTimes); 
+  preKvmAllocTimes = kvmAllocTimes;
+  printf("%s\n\n\n","================================================="); 
   
   return kpgtbl;
 }
@@ -53,7 +93,15 @@ kvmmake(void)
 void
 kvminit(void)
 {
+  kvmAllocTimes=0; 
+  kvmAllocPeriod=1; 
+  
   kernel_pagetable = kvmmake();
+  
+  kvmAllocPeriod=0;
+  printf("%s\n","================================================="); 
+  printf("kvminit:\nTotal kalloc times -> %d\n",kvmAllocTimes); 
+  printf("%s\n\n\n","================================================="); 
 }
 
 // Switch h/w page table register to the kernel's page table,
@@ -96,6 +144,7 @@ walk(pagetable_t pagetable, uint64 va, int alloc)
       if(!alloc || (pagetable = (pde_t*)kalloc()) == 0)
         return 0;
       memset(pagetable, 0, PGSIZE);
+      
       *pte = PA2PTE(pagetable) | PTE_V;
     }
   }
