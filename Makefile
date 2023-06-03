@@ -111,6 +111,10 @@ $U/_forktest: $U/forktest.o $(ULIB)
 $U/_2048: $U/2048.o $(LIBC)
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $U/_2048 $U/2048.o $L/libc.o $U/usys.o
 	$(OBJDUMP) -S $U/_2048 > $U/2048.asm
+	
+$U/_minesweeper: $U/minesweeper.o $(LIBC)
+	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $U/_minesweeper $U/minesweeper.o $L/libc.o $U/usys.o
+	$(OBJDUMP) -S $U/_minesweeper > $U/minesweeper.asm
 
 mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
 	gcc -Werror -Wall -I. -o mkfs/mkfs mkfs/mkfs.c
@@ -139,6 +143,7 @@ UPROGS=\
 	$U/_wc\
 	$U/_zombie\
 	$U/_2048\
+	$U/_minesweeper\
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
