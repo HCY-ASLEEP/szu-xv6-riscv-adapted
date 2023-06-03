@@ -30,6 +30,9 @@
 #define VIRTIO_MMIO_DEVICE_DESC_LOW	0x0a0 // physical address for used ring, write-only
 #define VIRTIO_MMIO_DEVICE_DESC_HIGH	0x0a4
 
+#define VIRTIO_MMIO_QUEUE_PFN		0x040 // physical page number for queue, read/write
+#define VIRTIO_MMIO_GUEST_PAGE_SIZE	0x028 // page size for PFN, write-only
+
 // status register bits, from qemu virtio_config.h
 #define VIRTIO_CONFIG_S_ACKNOWLEDGE	1
 #define VIRTIO_CONFIG_S_DRIVER		2
