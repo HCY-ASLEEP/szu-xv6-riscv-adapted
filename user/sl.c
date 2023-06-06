@@ -3,19 +3,19 @@
 #include "include/stdlib.h"
 #include "include/string.h"
 
-#define D51STR1  "        (@@@@)                                                                                   "
-#define D51STR2  "        (@@)                                                                                     "
-#define D51STR3  "        @                                                                                        "
-#define D51STR4  "      ====        ________                 __________      _______________________________       "
-#define D51STR5  "  _D _|  |_______/        \\\\__I_I_____===__|_________|    /                               \\\\___A "
-#define D51STR6  "   |(_)---  |   H\\\\________/ |   |        =|___ ___|     |   ||   ||   ||====   \\\\    //        |"
-#define D51STR7  "   /     |  |   H  |  |      |   |         ||_| |_||     |   ||___||   ||        \\\\  //         |"
-#define D51STR8  "  |      |  |   H  |__---------------------| [___] |     |   ||   ||   ||          ||           |"
-#define D51STR9  "  | ________|___H__/__|_____/[][]~\\\\_______|       |     |   ||   ||   ||====      ||           |"
-#define D51STRa  "  |/ |   |-----------I_____I [][] []  D    |=======|_____|______________________________________|"
-#define D51STRb  "__/ =| o |=-~~\\\\  /~~\\\\  /~~\\\\  /~~\\\\ ____Y___________|__|______________________________________|"
-#define D51STRc  " |/-=|___|=O=====O=====O=====O   |_____/~\\\\___/              |_D__D__D__D__| |D__D__| |D__D__D|  "
-#define D51STRd  "  \\\\_/      \\\\__/  \\\\__/  \\\\__/  \\\\__/      \\\\_/               \\\\_/   \\\\_/     \\\\_/     \\\\_/     "
+#define D51STR1  "                                                                             (@@@@)                                                                                   "
+#define D51STR2  "                                                                             (@@)                                                                                     "
+#define D51STR3  "                                                                             @                                                                                        "
+#define D51STR4  "                                                                           ====        ________                 __________      _______________________________       "
+#define D51STR5  "                                                                       _D _|  |_______/        \\\\__I_I_____===__|_________|    /                               \\\\___A "
+#define D51STR6  "                                                                        |(_)---  |   H\\\\________/ |   |        =|___ ___|     |   ||   ||   ||====   \\\\    //        |"
+#define D51STR7  "                                                                        /     |  |   H  |  |      |   |         ||_| |_||     |   ||___||   ||        \\\\  //         |"
+#define D51STR8  "                                                                       |      |  |   H  |__---------------------| [___] |     |   ||   ||   ||          ||           |"
+#define D51STR9  "                                                                       | ________|___H__/__|_____/[][]~\\\\_______|       |     |   ||   ||   ||====      ||           |"
+#define D51STRa  "                                                                       |/ |   |-----------I_____I [][] []  D    |=======|_____|______________________________________|"
+#define D51STRb  "                                                                     __/ =| o |=-~~\\\\  /~~\\\\  /~~\\\\  /~~\\\\ ____Y___________|__|______________________________________|"
+#define D51STRc  "                                                                      |/-=|___|=O=====O=====O=====O   |_____/~\\\\___/              |_D__D__D__D__| |D__D__| |D__D__D|  "
+#define D51STRd  "                                                                       \\\\_/      \\\\__/  \\\\__/  \\\\__/  \\\\__/      \\\\_/               \\\\_/   \\\\_/     \\\\_/     \\\\_/     "
 
 #define DELAY  900
 
@@ -35,12 +35,12 @@ const char* D51STR[13]={
   D51STRd,
 }; 
 
-void init();
-void show();
-void stringSlice(const char* source, int start, int end, char* destination); 
-void uselessSort(); 
-void delay(int level); 
-void faded(); 
+void init(); // init the console
+void show(); // print the little train
+void stringSlice(const char* source, int start, int end, char* destination); // emulate python string slice
+void uselessSort(); // useless bubble to consume time
+void delay(int level); // function to emulate sleep()
+void faded(); // let the little train fade away 
 
 void init(){
   printf("\033[2J");
@@ -51,7 +51,7 @@ void show(){
 
 void showPart(int beginIndex, int endIndex){
   
-  char result[13][100]; 
+  char result[13][200]; 
    for(int i=0;i<13;i++){
      stringSlice(D51STR[i],beginIndex,endIndex,result[i]); 
    }
@@ -69,9 +69,9 @@ void showPart(int beginIndex, int endIndex){
 
 void faded(){
   int showMaxLen=strlen(D51STR1);   
-  for(int i=0; i<showMaxLen; i++){
+  for(int i=0; i<showMaxLen; i+=2){
     showPart(i,showMaxLen-1);
-    delay(110); 
+    delay(i*2); 
   }
 }
 

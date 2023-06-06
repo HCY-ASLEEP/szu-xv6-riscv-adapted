@@ -92,19 +92,6 @@ void showboard(){
   }
 }
 
-#if MINESWEEPER_DEBUG == 1
-void dumpboard(){
-  int i,j;
-  for(i=0; i<width; i++){
-    for(j=0; j<height; j++){
-      print_2d(board[i][j]);
-      printf(" ");
-    }
-    printf("\n");
-  }
-}
-#endif
-
 int myrand(int n) {
   static int lcg = 0;
   int x;
@@ -145,9 +132,6 @@ void init0(int s){
   case MEDIUM:
     init00(16,16,40);
     return;
-//  case ADVANCED:
-//    init00(30,16,99);
-//    return;
   }
 }
 

@@ -17,6 +17,7 @@ int board[4][4];
 int score;
   
 
+// random number generator
 int myrand(int n) {
   static int lcg = 0;
   int x;
@@ -30,6 +31,7 @@ void print_int(int d)
   printf("%4d", d);
 }
 
+// change block color
 void changeColor(int b){
   if(b==0){
     printf("\033[0m");
@@ -165,6 +167,7 @@ void init(){
   printf("\033[2J");
 }
 
+// char to directory
 int c2dir(char c){
   switch(c){
   case 'w':
